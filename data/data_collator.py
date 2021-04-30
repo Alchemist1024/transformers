@@ -194,6 +194,7 @@ class DataCollatorForTokenClassification:
 
 def _collate_batch(examples, tokenizer):
     """Collate `examples` into a batch, using the information in `tokenizer` for padding if necessary."""
+    # 把原始数据封装成batch的形式
     # Tensorize if necessary.
     if isinstance(examples[0], (list, tuple)):
         examples = [torch.tensor(e, dtype=torch.long) for e in examples]

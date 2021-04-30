@@ -118,6 +118,7 @@ class TextDataset(Dataset):
 class LineByLineTextDataset(Dataset):
     """
     This will be superseded by a framework-agnostic approach soon.
+    原始数据经过tokenizer之后存储下来
     """
 
     def __init__(self, tokenizer: PreTrainedTokenizer, file_path: str, block_size: int):
