@@ -141,7 +141,9 @@ def relative_position_encoding(depth, max_length=512, max_relative_position=127)
     '''有了绝对位置编码为什么还要相对编码呢？
     在BERT模型预训练时，很多数据的真实数据长度达不到最大长度，因此靠后位置的位置向量训练的次数要比靠前位置的位置向量的次数少，
     造成靠后的参数位置编码学习的不够。在计算当前位置的向量的时候，应该考虑与它相互依赖的token之间相对位置关系，可以更好地学习到信息之间的交互传递。
+    主要实现：相对距离矩阵*绝对位置编码
     '''
+    # vocab_size表示的是当前当前token和前后vocab_size个token算相对距离 
     vocab_size = max_relative_position * 2 + 1
     range_vec = torch.arange(max_length)
     range_mat = range_vec.repeat(max_length).view(max_length, max_length)
@@ -150,7 +152,7 @@ def relative_position_encoding(depth, max_length=512, max_relative_position=127)
     # torch.clamp()限定小于-max_relative_position的值为-max_relative_position,大于max_relative_position的值为max_relative_position
     distance_mat_clipped = torch.clamp(distance_mat, -max_relative_position, max_relative_position)
     # shape(max_len, max_len) +max_relative_position的目的是为了保证位置信息都为正
-    # final_mat中保存的是相对距离
+    # final_mat中保存的是相对距离, 把相对距离变为正数
     final_mat = distance_mat_clipped + max_relative_position
 
     # 以下代码就是相对位置可以表示的大小
